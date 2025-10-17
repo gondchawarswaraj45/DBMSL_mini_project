@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <h3 class="text-center text-success fw-bold mb-4">🩺 Book an Appointment</h3>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" novalidate>
+      
+      <!-- Doctor Selection -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Select Doctor</label>
+        <select name="doctor_id" class="form-select" required>
+          <option value="">-- Choose a Doctor --</option>
+          {% set current_dept = None %}
+          {% for d in doctors %}
+            {% if d.dept_name != current_dept %}
+              {% if not loop.first %}</optgroup>{% endif %}
+              <optgroup label="{{ d.dept_name }}">
+              {% set current_dept = d.dept_name %}
+            {% endif %}
+            <option value="{{ d.doctor_id }}">
+              Dr. {{ d.name }} — {{ d.specialization or 'General Medicine' }} 
+              (₹{{ d.fees }})
+            </option>
+            {% if loop.last %}</optgroup>{% endif %}
+          {% endfor %}
+        </select>
+        <small class="text-muted">Only available doctors for the selected date/time will be accepted.</small>
+      </div>
+
+      <!-- Patient Selection -->
+      {% if session['role'] == 'admin' %}
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Select Patient</label>
+        <select name="patient_id" class="form-select" required>
+          <option value="">-- Choose a Patient --</option>
+          {% for p in patients %}
+          <option value="{{ p.patient_id }}">{{ p.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% else %}
+      <input type="hidden" name="patient_id" value="{{ patient_id }}">
+      {% endif %}
+
+      <!-- Appointment Date & Time -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Appointment Date</label>
+          <input type="date" name="appointment_date" class="form-control"
+                 min="{{ current_date }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Time Slot</label>
+          <input type="time" name="appointment_time" class="form-control" required>
+        </div>
+      </div>
+
+      <!-- Submit & Cancel Buttons -->
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-success px-5 fw-bold shadow-sm">
+          Book Appointment
+        </button>
+        <a href="{{ url_for('appointments_list') }}" class="btn btn-secondary ms-2">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+

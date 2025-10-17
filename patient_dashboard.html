@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <h2 class="text-center text-primary fw-bold mb-4">🏥 Patient Dashboard</h2>
+
+    <!-- Welcome Section -->
+    <div class="text-center mb-4">
+      <h5 class="fw-semibold">Welcome, {{ session['username'] }}!</h5>
+      <p class="text-muted mb-0">Here’s your medical summary and upcoming appointments.</p>
+    </div>
+
+    <!-- Quick Info Cards -->
+    <div class="row text-center g-4 mt-3">
+      <div class="col-md-4">
+        <div class="card bg-info text-white shadow-sm border-0 rounded-3">
+          <div class="card-body">
+            <h6>Assigned Doctor</h6>
+            <h5 class="fw-bold">{{ doctor_name or 'Not Assigned' }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white shadow-sm border-0 rounded-3">
+          <div class="card-body">
+            <h6>Room</h6>
+            <h5 class="fw-bold">{{ room_type or 'Not Assigned' }}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-warning text-dark shadow-sm border-0 rounded-3">
+          <div class="card-body">
+            <h6>Next Appointment</h6>
+            <h5 class="fw-bold">{{ next_appointment_date or 'No Upcoming' }}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointment Table -->
+    <div class="mt-5">
+      <h4 class="text-primary mb-3 text-center">📅 Your Appointments</h4>
+      <table class="table table-bordered table-striped text-center align-middle shadow-sm">
+        <thead class="table-light">
+          <tr>
+            <th>Date</th><th>Time</th><th>Doctor</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in appointments %}
+          <tr>
+            <td>{{ a.appointment_date }}</td>
+            <td>{{ a.time_slot }}</td>
+            <td>{{ a.doctor_name }}</td>
+            <td>
+              {% if a.appointment_date >= current_date %}
+                <span class="badge bg-success">Upcoming</span>
+              {% else %}
+                <span class="badge bg-secondary">Completed</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-muted">No appointments found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Billing Summary -->
+    <div class="mt-5">
+      <h4 class="text-danger mb-3 text-center">💳 Billing Summary</h4>
+      <table class="table table-bordered text-center align-middle shadow-sm">
+        <thead class="table-light">
+          <tr>
+            <th>Doctor Fee (₹)</th><th>Room Charge (₹)</th><th>Medicine (₹)</th><th>Total (₹)</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bills %}
+          <tr>
+            <td>{{ b.doctor_fee }}</td>
+            <td>{{ b.room_charge }}</td>
+            <td>{{ b.medicine_charge }}</td>
+            <td class="fw-bold text-primary">{{ b.total_bill }}</td>
+            <td>
+              {% if b.payment_status == 'Paid' %}
+                <span class="badge bg-success">Paid</span>
+              {% else %}
+                <span class="badge bg-danger">Unpaid</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="text-muted">No billing information available.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

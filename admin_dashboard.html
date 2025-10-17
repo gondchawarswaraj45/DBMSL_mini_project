@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+  <h2 class="text-center fw-bold text-primary mb-4">🏥 Admin Dashboard</h2>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Dashboard Summary Cards -->
+  <div class="row g-4 text-center">
+    <div class="col-md-4">
+      <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
+        <div class="d-flex align-items-center justify-content-center mb-3">
+          <i class="bi bi-person-badge fs-1 text-primary me-2"></i>
+          <h5 class="fw-semibold mb-0">Doctors</h5>
+        </div>
+        <h2 class="text-primary fw-bold">{{ doctor_count }}</h2>
+        <p class="text-muted small">Registered doctors</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
+        <div class="d-flex align-items-center justify-content-center mb-3">
+          <i class="bi bi-people fs-1 text-success me-2"></i>
+          <h5 class="fw-semibold mb-0">Patients</h5>
+        </div>
+        <h2 class="text-success fw-bold">{{ patient_count }}</h2>
+        <p class="text-muted small">Active patients</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
+        <div class="d-flex align-items-center justify-content-center mb-3">
+          <i class="bi bi-door-closed fs-1 text-warning me-2"></i>
+          <h5 class="fw-semibold mb-0">Rooms</h5>
+        </div>
+        <h2 class="text-warning fw-bold">{{ room_count }}</h2>
+        <p class="text-muted small">Total hospital rooms</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="text-center mt-5">
+    <h4 class="fw-semibold mb-3">Quick Actions</h4>
+
+    <a href="{{ url_for('add_doctor') }}" class="btn btn-primary me-2 shadow-sm">
+      ➕ Add Doctor
+    </a>
+
+    <a href="{{ url_for('patient_room_chart') }}" class="btn btn-outline-info me-2 shadow-sm">
+      🏠 View Room Chart
+    </a>
+
+    <a href="{{ url_for('manage_admissions') }}" class="btn btn-outline-warning me-2 shadow-sm">
+      🛏️ Manage Admissions
+    </a>
+
+    <a href="{{ url_for('reports') }}" class="btn btn-outline-success shadow-sm">
+      📊 View Reports
+    </a>
+    
+    <a href="{{ url_for('discharge_patient') }}" class="btn btn-outline-danger ms-2 shadow-sm">
+    🩺 Discharge Patient
+    </a>
+
+  </div>
+
+  <!-- Analytics Section Placeholder -->
+  <div class="mt-5 text-center text-muted">
+    <hr>
+    <p class="small">
+      
+    </p>
+  </div>
+</div>
+
+{% endblock %}
+

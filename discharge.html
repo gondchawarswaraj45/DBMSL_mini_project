@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <h3 class="text-center text-primary fw-bold mb-4">🏥 Discharge Patients</h3>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Discharge Form -->
+    <form method="POST" class="mb-5">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Select Patient (Admitted)</label>
+          <select name="admission_id" class="form-select" required>
+            <option value="">-- Choose a Patient --</option>
+            {% for a in active_admissions %}
+            <option value="{{ a.admission_id }}">
+              {{ a.patient_name }} ({{ a.room_number }} - {{ a.room_type }})
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Discharge Date</label>
+          <input type="date" name="discharge_date" class="form-control" required>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Doctor Fees (₹)</label>
+          <input type="number" name="doctor_fees" class="form-control" required>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Room Charges (₹)</label>
+          <input type="number" name="room_charges" class="form-control" required>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Medicine Charges (₹)</label>
+          <input type="number" name="medicine_charges" class="form-control" required>
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success px-5 fw-bold">🩺 Discharge Patient</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Discharge History -->
+    <h4 class="fw-bold mb-3 text-secondary">📋 Discharge Records</h4>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle text-center shadow-sm">
+        <thead class="table-primary">
+          <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Doctor Fees</th>
+            <th>Room Charges</th>
+            <th>Medicine</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in discharges %}
+          <tr>
+            <td>{{ d.discharge_id }}</td>
+            <td>{{ d.patient_name }}</td>
+            <td>{{ d.discharge_date }}</td>
+            <td>₹{{ d.doctor_fees }}</td>
+            <td>₹{{ d.room_charges }}</td>
+            <td>₹{{ d.medicine_charges }}</td>
+            <td class="fw-bold text-success">₹{{ d.total_bill }}</td>
+            <td>
+              <span class="badge bg-{{ 'success' if d.payment_status == 'Paid' else 'danger' }}">
+                {{ d.payment_status }}
+              </span>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="8" class="text-muted py-3">No discharge records yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

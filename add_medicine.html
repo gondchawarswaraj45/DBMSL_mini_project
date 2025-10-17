@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <h3 class="text-primary fw-bold text-center mb-4">💊 Add New Medicine</h3>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" novalidate>
+      <!-- Medicine Name -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Medicine Name</label>
+        <input type="text" name="medicine_name" class="form-control"
+               placeholder="Enter medicine name" required>
+      </div>
+
+      <!-- Manufacturer -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Manufacturer</label>
+        <input type="text" name="manufacturer" class="form-control"
+               placeholder="Enter manufacturer name (optional)">
+      </div>
+
+      <!-- Price per Unit -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Price per Unit (₹)</label>
+        <input type="number" name="price_per_unit" step="0.01" min="0"
+               class="form-control" placeholder="e.g. 25.50" required>
+      </div>
+
+      <!-- Stock Quantity -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Stock Quantity</label>
+        <input type="number" name="stock" min="0" class="form-control"
+               placeholder="Enter available units" required>
+      </div>
+
+      <!-- Buttons -->
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-success px-5 fw-bold shadow-sm">Save Medicine</button>
+        <a href="{{ url_for('medicines') }}" class="btn btn-secondary ms-2">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+

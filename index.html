@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ✅ Welcome Header -->
+<div class="container text-center mt-5">
+  <div class="p-4 bg-light rounded shadow-sm">
+    <h1 class="fw-bold text-primary mb-3">🏥 Hospital Management System</h1>
+
+    {% if session.get('role') %}
+      <p class="lead text-secondary">
+        Welcome <strong>{{ session['username'] }}</strong>!  
+        You are logged in as <span class="text-capitalize">{{ session['role'] }}</span>.
+      </p>
+    {% else %}
+      <p class="lead text-secondary">
+        Please log in to access the system.
+      </p>
+    {% endif %}
+
+    <img src="{{ url_for('static', filename='images/hospital_banner.jpg') }}" 
+         alt="Hospital Banner" 
+         class="img-fluid rounded shadow-lg my-4"
+         style="max-height: 350px; width: 100%; object-fit: cover;">
+  </div>
+</div>
+
+<!-- ✅ Role-based Quick Links -->
+{% if session.get('role') %}
+<div class="container mt-5 mb-5">
+  <div class="row g-4 justify-content-center">
+
+    {% if session['role'] == 'admin' %}
+      <!-- Admin Cards -->
+      <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="{{ url_for('static', filename='images/doctor.jpg') }}" class="card-img-top" alt="Doctors">
+          <div class="card-body text-center">
+            <h5 class="card-title text-success fw-bold">Doctors</h5>
+            <p class="small text-muted">Manage doctor profiles and schedules.</p>
+            <a href="{{ url_for('doctor_list') }}" class="btn btn-outline-success btn-sm">Manage Doctors</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="{{ url_for('static', filename='images/patient.jpg') }}" class="card-img-top" alt="Patients">
+          <div class="card-body text-center">
+            <h5 class="card-title text-primary fw-bold">Patients</h5>
+            <p class="small text-muted">View and manage patient records.</p>
+            <a href="{{ url_for('appointments_list') }}" class="btn btn-outline-primary btn-sm">Appointments</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="{{ url_for('static', filename='images/billing.jpg') }}" class="card-img-top" alt="Billing">
+          <div class="card-body text-center">
+            <h5 class="card-title text-danger fw-bold">Billing</h5>
+            <p class="small text-muted">Manage patient billing and payments.</p>
+            <a href="{{ url_for('billing') }}" class="btn btn-outline-danger btn-sm">Billing</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="{{ url_for('static', filename='images/reports.jpg') }}" class="card-img-top" alt="Reports">
+          <div class="card-body text-center">
+            <h5 class="card-title text-warning fw-bold">Reports</h5>
+            <p class="small text-muted">View performance and revenue reports.</p>
+            <a href="{{ url_for('reports') }}" class="btn btn-outline-warning btn-sm">Reports</a>
+          </div>
+        </div>
+      </div>
+
+    {% elif session['role'] == 'doctor' %}
+      <!-- Doctor Cards -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="{{ url_for('static', filename='images/appointments.jpg') }}" class="card-img-top" alt="Appointments">
+          <div class="card-body text-center">
+            <h5 class="card-title text-success fw-bold">My Appointments</h5>
+            <p class="small text-muted">View your patient schedule and bookings.</p>
+            <a href="{{ url_for('appointments_list') }}" class="btn btn-outline-success btn-sm">View Appointments</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="{{ url_for('static', filename='images/schedule.jpg') }}" class="card-img-top" alt="Schedule">
+          <div class="card-body text-center">
+            <h5 class="card-title text-primary fw-bold">My Schedule</h5>
+            <p class="small text-muted">Manage your shift timings and days.</p>
+            <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline-primary btn-sm">Go to Dashboard</a>
+          </div>
+        </div>
+      </div>
+
+    {% elif session['role'] == 'patient' %}
+      <!-- Patient Cards -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="{{ url_for('static', filename='images/appointments.jpg') }}" class="card-img-top" alt="Appointments">
+          <div class="card-body text-center">
+            <h5 class="card-title text-success fw-bold">Appointments</h5>
+            <p class="small text-muted">Book and manage your doctor appointments.</p>
+            <a href="{{ url_for('appointments_list') }}" class="btn btn-outline-success btn-sm">My Appointments</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="{{ url_for('static', filename='images/billing.jpg') }}" class="card-img-top" alt="Billing">
+          <div class="card-body text-center">
+            <h5 class="card-title text-danger fw-bold">My Billing</h5>
+            <p class="small text-muted">View your billing and payment details.</p>
+            <a href="{{ url_for('billing') }}" class="btn btn-outline-danger btn-sm">My Bills</a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+

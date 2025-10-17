@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <h3 class="text-primary mb-4 fw-bold text-center">➕ Add New Patient</h3>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" novalidate>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Full Name</label>
+          <input name="name" type="text" class="form-control" placeholder="Enter patient's full name" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Age</label>
+          <input name="age" type="number" class="form-control" min="0" placeholder="e.g. 45" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Gender</label>
+          <select name="gender" class="form-select" required>
+            <option value="">-- Select --</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Contact Number</label>
+          <div class="input-group">
+            <span class="input-group-text">+91</span>
+            <input name="contact_no" type="text" class="form-control"
+                   pattern="[0-9]{10}" maxlength="10"
+                   title="Enter 10-digit mobile number"
+                   placeholder="10-digit number" required>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Disease</label>
+          <input name="disease" type="text" class="form-control"
+                 placeholder="Enter disease or condition" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Address</label>
+        <input name="address" type="text" class="form-control"
+               placeholder="Enter patient address (optional)">
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Admit Date</label>
+          <input name="admit_date" type="date" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Assign Doctor</label>
+          <select name="doctor_id" class="form-select" required>
+            <option value="">-- Select Doctor --</option>
+            {% for d in doctors %}
+              <option value="{{ d.doctor_id }}">{{ d.name }} ({{ d.specialization }})</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Assign Room</label>
+        <select name="room_id" class="form-select">
+          <option value="">-- Select Available Room --</option>
+          {% for r in rooms %}
+            <option value="{{ r.room_id }}">{{ r.room_type }} - ₹{{ r.charges_per_day }}/day</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">Save Patient</button>
+        <a href="{{ url_for('patients') }}" class="btn btn-secondary ms-2">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+

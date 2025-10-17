@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="fw-bold text-primary">Billing Records</h3>
+
+    {% if session['role'] in ['admin', 'patient'] %}
+    <a href="{{ url_for('generate_invoice') }}" class="btn btn-success shadow-sm">
+      🧾 Generate Invoice
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Billing Table -->
+  <div class="table-responsive shadow-sm">
+    <table class="table table-bordered table-hover align-middle text-center">
+      <thead class="table-primary">
+        <tr>
+          <th>#</th>
+          <th>Patient Name</th>
+          <th>Doctor Name</th>
+          <th>Doctor Fee (₹)</th>
+          <th>Room Charge (₹)</th>
+          <th>Medicine Charge (₹)</th>
+          <th>Total Bill (₹)</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if bills %}
+          {% for b in bills %}
+          <tr {% if b.total_bill > 10000 %}class="table-warning"{% endif %}>
+            <td>{{ loop.index }}</td>
+            <td>{{ b.patient_name }}</td>
+            <td>{{ b.doctor_name }}</td>
+            <td>{{ b.doctor_fee or '-' }}</td>
+            <td>{{ b.room_charge or '-' }}</td>
+            <td>{{ b.medicine_charge or '-' }}</td>
+            <td><strong>₹{{ b.total_bill }}</strong></td>
+            <td>{{ b.billing_date.strftime('%d-%m-%Y') if b.billing_date else '-' }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="8" class="text-muted py-3">No billing records available.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Summary Footer -->
+  {% if bills %}
+  <div class="card shadow-sm border-0 mt-4 p-3 text-center">
+    <h5 class="fw-semibold">
+      💰 Total Revenue: 
+      <span class="text-success fw-bold">
+        ₹{{ bills | sum(attribute='total_bill') }}
+      </span>
+    </h5>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+

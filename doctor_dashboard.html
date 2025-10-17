@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <h2 class="text-center text-primary fw-bold mb-4">👨‍⚕️ Doctor Dashboard</h2>
+
+    <!-- Greeting Section -->
+    <div class="text-center mb-4">
+      <h5 class="fw-semibold">Welcome, Dr. {{ session['username'] }}</h5>
+      <p class="text-muted">Here’s an overview of your day and patients.</p>
+      <a href="{{ url_for('doctor_schedule', doctor_id=session['linked_id']) }}" class="btn btn-outline-primary mt-2">
+        🕒 Manage My Schedule
+      </a>
+    </div>
+
+    <!-- Quick Summary -->
+    <div class="row text-center g-4 mt-3">
+      <div class="col-md-4">
+        <div class="card bg-primary text-white shadow-sm border-0 rounded-3">
+          <div class="card-body">
+            <h5>Today’s Appointments</h5>
+            <h2 class="fw-bold">{{ today_appointments|length if today_appointments else 0 }}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white shadow-sm border-0 rounded-3">
+          <div class="card-body">
+            <h5>Active Patients</h5>
+            <h2 class="fw-bold">{{ assigned_patients|length if assigned_patients else 0 }}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-warning text-dark shadow-sm border-0 rounded-3">
+          <div class="card-body">
+            <h5>Upcoming Appointments</h5>
+            <h2 class="fw-bold">{{ upcoming_appointments|length if upcoming_appointments else 0 }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's Appointments -->
+    <div class="mt-5">
+      <h4 class="text-primary mb-3">📅 Today's Appointments</h4>
+      <table class="table table-striped text-center align-middle shadow-sm">
+        <thead class="table-light">
+          <tr>
+            <th>Time</th>
+            <th>Patient Name</th>
+            <th>Disease</th>
+            <th>Room</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in today_appointments %}
+          <tr>
+            <td>{{ appt.time_slot }}</td>
+            <td>{{ appt.patient_name }}</td>
+            <td>{{ appt.disease or '—' }}</td>
+            <td>{{ appt.room_type or '—' }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-muted">No appointments scheduled for today.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Assigned Patients -->
+    <div class="mt-5">
+      <h4 class="text-success mb-3">🧍‍♀️ My Patients</h4>
+      <table class="table table-bordered text-center align-middle shadow-sm">
+        <thead class="table-light">
+          <tr>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Disease</th>
+            <th>Room</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in assigned_patients %}
+          <tr>
+            <td>{{ p.name }}</td>
+            <td>{{ p.age }}</td>
+            <td>{{ p.gender }}</td>
+            <td>{{ p.disease }}</td>
+            <td>{{ p.room_type or '—' }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="text-muted">No patients assigned.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,46 @@
+HospitalManagementSystem/
+│
+├── app/                      # Main application package
+│
+├── config/                   # Configuration files (database, settings)
+│
+├── db_init/                  # Database initialization or schema setup
+│
+├── templates/                # Frontend HTML templates (e.g., Flask/Django)
+│   ├── add_appointment.html
+│   ├── add_billing.html
+│   ├── add_doctor.html
+│   ├── add_medicine.html
+│   ├── add_patient.html
+│   ├── admin_dashboard.html
+│   ├── doctor_dashboard.html
+│   ├── patient_dashboard.html
+│   ├── doctor_schedule.html
+│   ├── discharge.html
+│   ├── appointments.html
+│   ├── billing.html
+│   ├── create_bill.html
+│   ├── create_user.html
+│   ├── login.html
+│   ├── reports.html
+│   ├── hospital_banner.html
+│   ├── hospital_logo.html
+│   ├── patient_room_chart.html
+│   └── index.html
+│
+├── static/                   # CSS, JS, and images
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+├── models/                   # Database models (doctor, patient, billing, etc.)
+│
+├── routes/                   # Python/JS files handling URL routes (e.g., add_patient.py)
+│
+├── base/                     # Common utilities or base templates
+│
+├── main.py / app.py           # Entry point (main backend file)
+│
+├── requirements.txt           # Dependencies list (if Python)
+│
+└── README.md                  # Project description

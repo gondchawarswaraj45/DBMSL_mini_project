@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <h2 class="fw-bold text-primary text-center mb-4">📊 Hospital Reports Dashboard</h2>
+
+  <!-- Appointments per Doctor -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white fw-semibold">
+      Appointments per Doctor
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-bordered table-hover mb-0 text-center align-middle">
+        <thead class="table-light">
+          <tr><th>Doctor</th><th>Total Appointments</th></tr></thead>
+        <tbody>
+          {% if appt_by_doc %}
+            {% for r in appt_by_doc %}
+            <tr>
+              <td>{{ r.doctor }}</td>
+              <td><strong>{{ r.total_appointments }}</strong></td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="2" class="text-muted">No data available</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Available Rooms -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-success text-white fw-semibold">
+      Available Rooms
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-bordered table-hover mb-0 text-center align-middle">
+        <thead class="table-light">
+          <tr><th>Room ID</th><th>Type</th><th>Charge/Day (₹)</th></tr></thead>
+        <tbody>
+          {% if available_rooms %}
+            {% for r in available_rooms %}
+            <tr>
+              <td>{{ r.room_id }}</td>
+              <td>{{ r.room_type }}</td>
+              <td>₹{{ r.charges_per_day }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="3" class="text-muted">No rooms available</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Low Stock Medicines -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-warning text-dark fw-semibold">
+      Low Stock Medicines (< 20 units)
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-bordered table-hover mb-0 text-center align-middle">
+        <thead class="table-light">
+          <tr><th>Name</th><th>Manufacturer</th><th>Stock</th></tr></thead>
+        <tbody>
+          {% if low_stock %}
+            {% for m in low_stock %}
+            <tr class="{% if m.stock < 10 %}table-danger{% endif %}">
+              <td>{{ m.medicine_name }}</td>
+              <td>{{ m.manufacturer or '-' }}</td>
+              <td>{{ m.stock }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="3" class="text-muted">All medicines sufficiently stocked</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Revenue by Department -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-info text-white fw-semibold">
+      Revenue by Department
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-bordered table-hover mb-0 text-center align-middle">
+        <thead class="table-light">
+          <tr><th>Department</th><th>Total Revenue (₹)</th></tr></thead>
+        <tbody>
+          {% if revenue_by_dept %}
+            {% for d in revenue_by_dept %}
+            <tr>
+              <td>{{ d.dept_name }}</td>
+              <td><strong class="text-success">₹{{ d.revenue }}</strong></td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="2" class="text-muted">No revenue data available</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Future: Chart Section Placeholder -->
+  <div class="text-center mt-5">
+    <small class="text-muted">
+      📈 Charts and visual analytics coming soon (using Chart.js integration)
+    </small>
+  </div>
+</div>
+
+{% endblock %}
+

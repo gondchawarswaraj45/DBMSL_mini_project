@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <h3 class="text-center text-primary fw-bold mb-4">🏥 Patient–Room Chart</h3>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Summary Cards -->
+    <div class="row text-center mb-4">
+      <div class="col-md-4 mb-3">
+        <div class="card bg-primary text-white shadow-sm border-0">
+          <div class="card-body">
+            <h5>Total Rooms</h5>
+            <h2 class="fw-bold">{{ total_rooms }}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card bg-danger text-white shadow-sm border-0">
+          <div class="card-body">
+            <h5>Occupied Rooms</h5>
+            <h2 class="fw-bold">{{ occupied_rooms }}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card bg-success text-white shadow-sm border-0">
+          <div class="card-body">
+            <h5>Vacant Rooms</h5>
+            <h2 class="fw-bold">{{ total_rooms - occupied_rooms }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room Mapping Table -->
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered align-middle text-center shadow-sm">
+        <thead class="table-primary">
+          <tr>
+            <th>Room No.</th>
+            <th>Room Type</th>
+            <th>Charges/Day</th>
+            <th>Bed Count</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if rows %}
+            {% for row in rows %}
+            <tr class="{% if row.patient_name %}table-warning{% else %}table-light{% endif %}">
+              <td class="fw-semibold">{{ row.room_number }}</td>
+              <td>{{ row.room_type }}</td>
+              <td>₹{{ row.charges_per_day or '—' }}</td>
+              <td>{{ row.bed_count or '—' }}</td>
+              <td>{{ row.patient_name or '—' }}</td>
+              <td>{{ row.doctor_name or '—' }}</td>
+              <td>
+                {% if row.patient_name %}
+                  <span class="badge bg-danger px-3 py-2">Occupied</span>
+                {% else %}
+                  <span class="badge bg-success px-3 py-2">Vacant</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="7" class="text-muted py-3">No patient-room mapping found.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

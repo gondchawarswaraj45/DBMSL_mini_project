@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 mb-5">
+  <h2 class="text-center text-primary mb-4">Appointments</h2>
+
+  {% if role in ['admin', 'patient'] %}
+    <div class="text-end mb-3">
+      <a href="{{ url_for('add_appointment') }}" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle"></i> Book New Appointment
+      </a>
+    </div>
+  {% endif %}
+
+  <!-- Upcoming -->
+  <h4 class="text-success mt-3">Upcoming Appointments</h4>
+  {% if upcoming %}
+  <table class="table table-hover shadow-sm mt-2">
+    <thead class="table-success">
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Patient</th>
+        <th>Doctor</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in upcoming %}
+      <tr>
+        <td>{{ a.appointment_id }}</td>
+        <td>{{ a.appointment_date }}</td>
+        <td>{{ a.time_slot }}</td>
+        <td>{{ a.patient_name }}</td>
+        <td>{{ a.doctor_name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No upcoming appointments.</p>
+  {% endif %}
+
+  <!-- Completed -->
+  <h4 class="text-secondary mt-5">Completed Appointments</h4>
+  {% if completed %}
+  <table class="table table-hover shadow-sm mt-2">
+    <thead class="table-secondary">
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Patient</th>
+        <th>Doctor</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in completed %}
+      <tr>
+        <td>{{ a.appointment_id }}</td>
+        <td>{{ a.appointment_date }}</td>
+        <td>{{ a.time_slot }}</td>
+        <td>{{ a.patient_name }}</td>
+        <td>{{ a.doctor_name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No completed appointments.</p>
+  {% endif %}
+</div>
+{% endblock %}
+

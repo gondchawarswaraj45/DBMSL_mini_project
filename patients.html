@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <!-- Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="fw-bold text-primary">Patients</h3>
+
+    {% if session['role'] == 'admin' %}
+    <a class="btn btn-success shadow-sm" href="{{ url_for('add_patient') }}">
+      ➕ Add Patient
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Search Bar -->
+  <form class="row g-2 mb-3" method="GET" action="{{ url_for('patients') }}">
+    <div class="col-md-4">
+      <input type="text" name="search" class="form-control" placeholder="Search by name or disease..." value="{{ request.args.get('search', '') }}">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-outline-primary w-100">Search</button>
+    </div>
+  </form>
+
+  <!-- Patients Table -->
+  <div class="table-responsive shadow-sm">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-primary">
+        <tr class="text-center">
+          <th>ID</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Contact No</th>
+          <th>Disease</th>
+          <th>Doctor</th>
+          <th>Room</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if patients %}
+          {% for p in patients %}
+          <tr>
+            <td class="text-center">{{ p.patient_id }}</td>
+            <td>{{ p.name }}</td>
+            <td class="text-center">{{ p.age }}</td>
+            <td class="text-center">{{ p.gender }}</td>
+            <td>{{ p.contact_no }}</td>
+            <td>{{ p.disease or '-' }}</td>
+            <td>{{ p.doctor_name or '-' }}</td>
+            <td>{{ p.room_type or '-' }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="8" class="text-center text-muted py-3">
+              No patient records found.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+

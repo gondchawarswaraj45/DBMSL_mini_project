@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <h3 class="text-center text-primary fw-bold mb-4">🏥 Patient Admission Management</h3>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Admission Form -->
+    <form method="POST" class="mb-5">
+      <div class="row g-3">
+
+        <!-- Patient -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Patient</label>
+          <select name="patient_id" class="form-select" required>
+            <option value="">-- Select Patient --</option>
+            {% for p in patients %}
+              <option value="{{ p.patient_id }}">{{ p.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Doctor -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Doctor</label>
+          <select name="doctor_id" class="form-select" required>
+            <option value="">-- Select Doctor --</option>
+            {% for d in doctors %}
+              <option value="{{ d.doctor_id }}">{{ d.name }} ({{ d.specialization }})</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Room -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Room</label>
+          <select name="room_id" class="form-select" required>
+            <option value="">-- Select Room --</option>
+            {% for r in rooms %}
+              <option value="{{ r.room_id }}">{{ r.room_number }} ({{ r.room_type }})</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Admission Date -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Admission Date</label>
+          <input type="date" name="admission_date" class="form-control" required>
+        </div>
+
+        <!-- Relative Name -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Relative's Name</label>
+          <input type="text" name="relative_name" class="form-control" placeholder="Enter relative's name" required>
+        </div>
+
+        <!-- Relative Contact -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Relative's Mobile No.</label>
+          <div class="input-group">
+            <span class="input-group-text">+91</span>
+            <input type="text" name="relative_contact" maxlength="10" class="form-control"
+                   placeholder="10-digit number" pattern="\d{10}" title="Enter valid 10-digit mobile number" required>
+          </div>
+        </div>
+
+        <!-- Relative Address -->
+        <div class="col-md-12">
+          <label class="form-label fw-semibold">Relative's Address</label>
+          <textarea name="relative_address" class="form-control" rows="2"
+                    placeholder="Enter relative's address" required></textarea>
+        </div>
+
+        <!-- Patient Address -->
+        <div class="col-md-12">
+          <label class="form-label fw-semibold">Patient's Address</label>
+          <textarea name="patient_address" class="form-control" rows="2"
+                    placeholder="Enter patient's address" required></textarea>
+        </div>
+
+        <!-- Submit -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success px-5 fw-bold shadow-sm">Admit Patient</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Current Admissions Table -->
+    <h4 class="fw-bold mb-3 text-secondary">🧾 Current Admissions</h4>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered align-middle text-center shadow-sm">
+        <thead class="table-primary">
+          <tr>
+            <th>Admission ID</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Room</th>
+            <th>Type</th>
+            <th>Admission Date</th>
+            <th>Relative</th>
+            <th>Contact</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if admissions %}
+            {% for a in admissions %}
+            <tr>
+              <td>{{ a.admission_id }}</td>
+              <td>{{ a.patient_name }}</td>
+              <td>{{ a.doctor_name }}</td>
+              <td>{{ a.room_number }}</td>
+              <td>{{ a.room_type }}</td>
+              <td>{{ a.admission_date }}</td>
+              <td>{{ a.relative_name }}</td>
+              <td>+91 {{ a.relative_contact }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="8" class="text-muted py-3">No active admissions yet.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
